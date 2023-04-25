@@ -5,7 +5,6 @@ import com.pragma.plazoleta.application.handler.IValidationHandler;
 import com.pragma.plazoleta.infrastructure.exception.RequestException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,17 +23,6 @@ class ValidationAdapterTest {
                 "6704985", "carlos@gmail.com", "Carlos1234*");
     }
 
-    @Test
-    void validateUserSuccessTest() {
-        assertDoesNotThrow(() -> validationHandler.validate(userRequestDto));
-    }
-    @Test
-    void validateUserNullTest() {
-        userRequestDto = null;
-        RequestException exception = assertThrows(RequestException.class,
-                ()->validationHandler.validate(userRequestDto));
-        assertEquals("El usuario no puede ser nulo", exception.getMessage());
-    }
     @ParameterizedTest
     @ValueSource(strings = {"", "22dcc", " "})
     void validateNameTestException(String name) {

@@ -8,6 +8,8 @@ import com.pragma.plazoleta.infrastructure.out.jpa.repository.IUserEntityReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 public class UserJpaAdapter implements IUserPersistencePort {
 
@@ -15,6 +17,12 @@ public class UserJpaAdapter implements IUserPersistencePort {
     private final IUserEntityMapper userEntityMapper;
     @Override
     public User saveUser(User user) {
+        Optional<UserEntity> findUser = userEntityRepository
+                .findByIdOrDocumentNumberOrEmail(user.getId(),user.getDocumentNumber(), user.getEmail());
+
+        if (findUser.isPresent())
+            throw new RequestException("El usuario ya existe", HttpStatus.BAD_REQUEST);
+
         UserEntity userEntity = userEntityRepository.save(userEntityMapper.toEntity(user));
         return userEntityMapper.toUserModel(userEntity);
     }

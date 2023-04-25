@@ -16,6 +16,6 @@ public class MenuDish {
     private String description;
     private String urlImage;
     private Integer categoryId;
-    private Integer restaurantId;
-    boolean active;
+    private Long restaurantId;
+    private boolean active;
 }

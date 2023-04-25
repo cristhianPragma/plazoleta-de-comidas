@@ -12,14 +12,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OwnerValidationAdapter implements IOwnerValidation {
     private int OWNER_ROL_ID = 2;
-    private final IUserFeignClietn userFeignClietn;
+    private final IUserFeignClietn userFeignClient;
 
     @Override
     public void validation(Long id) {
-        RoleResponseDto roleResponseDto = userFeignClietn.findByRoleId(id);
+        RoleResponseDto roleResponseDto = userFeignClient.findByRoleId(id);
         if (roleResponseDto.getId() != OWNER_ROL_ID)
             throw  new RequestException("El usuario ingresado no tiene el rol, para esta acción",
                     HttpStatus.BAD_REQUEST);
-
     }
 }

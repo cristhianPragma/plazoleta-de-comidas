@@ -5,4 +5,5 @@ import com.pragma.plazoletas.domain.model.MenuDish;
 
 public interface IMenuDishPersistentPort {
     void saveMenuDish(MenuDish menuDish);
+    MenuDish findByIdMenuDish(Long id);
 }

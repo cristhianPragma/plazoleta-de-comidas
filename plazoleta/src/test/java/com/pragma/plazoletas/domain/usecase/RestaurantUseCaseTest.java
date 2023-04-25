@@ -1,14 +1,13 @@
 package com.pragma.plazoletas.domain.usecase;
 
 import com.pragma.plazoletas.domain.model.Restaurant;
-import com.pragma.plazoletas.domain.spi.IRestaurantPersitentPort;
+import com.pragma.plazoletas.domain.spi.IRestaurantPersistentPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,7 +15,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class RestaurantUseCaseTest {
     @Mock
-    private IRestaurantPersitentPort restaurantPersitentPort;
+    private IRestaurantPersistentPort restaurantPersitentPort;
 
     @InjectMocks
     private RestaurantUseCase restaurantUseCase;

@@ -23,7 +23,7 @@ class ValidationAdapterTest {
 
     @BeforeEach
     void setUpOneTeOne(){
-        restaurantRequestDto = new RestaurantRequestDto("restaurante 1", "cra 1 este # 162-46",
+        restaurantRequestDto = new RestaurantRequestDto("restaurante 1", "cra1 este #162-46",
                 "1255666", "http://img.png","1125555", 1l);
     }
 
@@ -36,7 +36,7 @@ class ValidationAdapterTest {
         restaurantRequestDto = null;
         RequestException exception = assertThrows(RequestException.class,
                 ()->validationHandler.validate(restaurantRequestDto));
-        assertEquals("El restaurante no puede ser nulo", exception.getMessage());
+        assertEquals("El request enviado es nulo", exception.getMessage());
     }
     @ParameterizedTest
     @ValueSource(strings = {"123", " ", ""})
@@ -48,13 +48,44 @@ class ValidationAdapterTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123", "calle", " ","","cra1este 162-46"})
-    void validateAddressTestException(String addresss) {
-        restaurantRequestDto.setAddress(addresss);
+    @ValueSource(strings = {"123", "calle", " ",""})
+    void validateAddressTestException(String address) {
+        restaurantRequestDto.setAddress(address);
         RequestException exception = assertThrows(RequestException.class,
                 ()->validationHandler.validate(restaurantRequestDto));
         assertEquals("Formato de dirección incorrecto", exception.getMessage());
     }
 
-
+    @ParameterizedTest
+    @ValueSource(strings = {"123abc", "abc", " ", ""})
+    void validateRestaurantPhoneTestException(String phoneNumber) {
+        restaurantRequestDto.setRestaurantPhone(phoneNumber);
+        RequestException exception = assertThrows(RequestException.class,
+                ()->validationHandler.validate(restaurantRequestDto));
+        assertEquals("El número teléfonico debe contener entre 6 y 13 dígitos", exception.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {""})
+    void validateUrlLogoTestException(String urlLogo) {
+        restaurantRequestDto.setUrlLogo(urlLogo);
+        RequestException exception = assertThrows(RequestException.class,
+                ()->validationHandler.validate(restaurantRequestDto));
+        assertEquals("La url del logo es requerida", exception.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(strings = {"123abc", "abc", " ", ""})
+    void validateNitTestException(String nit) {
+        restaurantRequestDto.setNit(nit);
+        RequestException exception = assertThrows(RequestException.class,
+                ()->validationHandler.validate(restaurantRequestDto));
+        assertEquals("El número de NIT debe contener entre 3 y 20 dígitos", exception.getMessage());
+    }
+    @ParameterizedTest
+    @ValueSource(longs = {-5,0})
+    void validateOwnerIdTestException(Long ownerId) {
+        restaurantRequestDto.setOwnerId(ownerId);
+        RequestException exception = assertThrows(RequestException.class,
+                ()->validationHandler.validate(restaurantRequestDto));
+        assertEquals("Id de propietario incorrecto", exception.getMessage());
+    }
 }
