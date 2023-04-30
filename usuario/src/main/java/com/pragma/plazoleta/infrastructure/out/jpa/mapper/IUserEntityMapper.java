@@ -1,5 +1,6 @@
 package com.pragma.plazoleta.infrastructure.out.jpa.mapper;
 
+import com.pragma.plazoleta.application.dto.response.AuthenticatedUserResponseDto;
 import com.pragma.plazoleta.domain.model.User;
 import com.pragma.plazoleta.infrastructure.out.jpa.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -13,7 +14,11 @@ import org.mapstruct.ReportingPolicy;
 public interface IUserEntityMapper {
     @Mapping(source = "user.role", target = "roleEntity")
     UserEntity toEntity(User user);
+
     @Mapping(source ="userEntity.roleEntity" , target ="role")
     User toUserModel(UserEntity userEntity);
+
+    @Mapping(source ="userEntity.roleEntity.name" , target ="roleNameDto")
+    AuthenticatedUserResponseDto toAuthenticatedUser(UserEntity userEntity);
 
 }

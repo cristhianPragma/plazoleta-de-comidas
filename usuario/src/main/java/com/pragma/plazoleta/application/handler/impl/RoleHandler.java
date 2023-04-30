@@ -16,7 +16,6 @@ public class RoleHandler implements IRoleHandler {
     @Override
     public RoleResponseDto findByRoleId(int roleId) {
         Role role = roleServicePort.findById(roleId);
-        RoleResponseDto roleResponseDto = roleResponseMapper.toRoleResponse(role);
-        return roleResponseDto;
+        return roleResponseMapper.toRoleResponse(role);
     }
 }
