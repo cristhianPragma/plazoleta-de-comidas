@@ -13,6 +13,3 @@ spring:
   application:
     name: config-service
 
-
-appDescription: "Plaza de comidas"
-appVersion: "1.0.0"
