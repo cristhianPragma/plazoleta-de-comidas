@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/plazoleta
     username: root
-  application.name: restaurant-service
+  application.name: plazoleta-service
   jpa:
     hibernate:
       ddl-auto: update
