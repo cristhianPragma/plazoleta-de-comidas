@@ -1,4 +1,4 @@
-package com.pragma.plazoleta.infrastructure.security.jwt;
+package com.pragma.plazoletas.infrastructure.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

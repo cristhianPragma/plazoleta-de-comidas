@@ -1,23 +1,20 @@
-package com.pragma.plazoleta.infrastructure.security.jwt;
+package com.pragma.plazoletas.infrastructure.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -29,17 +26,12 @@ public class JwtService {
     public Long extractUserId(String token){
         return extractClaims(token, claims->claims.get("id", Long.class));
     }
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() +1000 * 60 * 24))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+
+    public List<SimpleGrantedAuthority> extractUserRole(String token){
+        List<Object> roleList = extractClaims(token, claims -> claims.get("role", List.class));
+        return roleList.stream()
+                .map(role -> new SimpleGrantedAuthority(role.toString()))
+                .collect(Collectors.toList());
     }
 
     public boolean isValidToken(String token){
@@ -76,5 +68,10 @@ public class JwtService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String parseJwt(String token){
+        token = token.substring(7);
+        return token;
     }
 }

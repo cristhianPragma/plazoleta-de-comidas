@@ -8,13 +8,12 @@ import com.pragma.plazoleta.application.handler.IUserHandler;
 import com.pragma.plazoleta.infrastructure.security.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,8 +30,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UserControllerTest {
     @Autowired
     private WebApplicationContext context;
@@ -63,7 +62,7 @@ class UserControllerTest {
         doNothing().when(userHandler)
                 .saveUser(userRequestDto, idAssignRole);
 
-        ResultActions response = mockMvc.perform(post("/api/user/administrator")
+        ResultActions response = mockMvc.perform(post("/users/administrator")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
@@ -80,7 +79,7 @@ class UserControllerTest {
         doNothing().when(userHandler)
                 .saveUser(userRequestDto, idAssignRole);
 
-        ResultActions response = mockMvc.perform(post("/api/user/administrator")
+        ResultActions response = mockMvc.perform(post("/users/administrator")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
@@ -97,7 +96,7 @@ class UserControllerTest {
         doNothing().when(userHandler)
                 .saveUser(userRequestDto, idAssignRole);
 
-        ResultActions response = mockMvc.perform(post("/api/user/owner")
+        ResultActions response = mockMvc.perform(post("/users/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
@@ -114,7 +113,7 @@ class UserControllerTest {
         doNothing().when(userHandler)
                 .saveUser(userRequestDto, idAssignRole);
 
-        ResultActions response = mockMvc.perform(post("/api/user/owner")
+        ResultActions response = mockMvc.perform(post("/users/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
@@ -131,7 +130,7 @@ class UserControllerTest {
 
         when(authService.authenticate(any(LoginRequest.class))).thenReturn(jwt);
 
-        ResultActions response = mockMvc.perform(post("/api/user/login")
+        ResultActions response = mockMvc.perform(post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
@@ -148,7 +147,7 @@ class UserControllerTest {
         doNothing().when(userHandler)
                 .saveUser(userRequestDto, idAssignRole);
 
-        ResultActions response = mockMvc.perform(post("/api/user/customer")
+        ResultActions response = mockMvc.perform(post("/users/customer")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 

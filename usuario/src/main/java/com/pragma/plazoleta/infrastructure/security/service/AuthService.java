@@ -34,6 +34,7 @@ public class AuthService {
                         .orElseThrow(()->new RequestException("Usuario no encontrado", HttpStatus.NOT_FOUND)));
         Map<String, Object> claims= new HashMap<>();
         claims.put("id", responseDto.getId());
+        claims.put("role", responseDto.getAuthorities());
         return new JwtResponse(jwtService.generateToken(claims, responseDto));
     }
 }

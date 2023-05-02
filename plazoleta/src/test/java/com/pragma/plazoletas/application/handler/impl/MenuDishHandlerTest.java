@@ -1,6 +1,7 @@
 package com.pragma.plazoletas.application.handler.impl;
 
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
+import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
 import com.pragma.plazoletas.application.handler.IValidateRestaurantOwnerId;
 import com.pragma.plazoletas.application.handler.IValidationHandler;
@@ -56,15 +57,15 @@ class MenuDishHandlerTest {
         doNothing().when(validationHandler).validate(menuDishRequest);
         when(menuDishRequestMapper.toMenuDish(menuDishRequest)).thenReturn(menuDish);
         when(restaurantServicePort.findByRestaurantId(restaurantId)).thenReturn(restaurant);
-        doNothing().when(validateRestaurantOwnerId).validateRestaurantOwnerId(restaurant, ownerId);
+        doNothing().when(validateRestaurantOwnerId).validateRestaurantOwnerId(restaurant, "ownerId");
         doNothing().when(menuDishServicePort).saveMenuDish(menuDish);
 
-        menuDishHandler.menuDishValidateAndSave(menuDishRequest, ownerId);
+        menuDishHandler.menuDishValidateAndSave(menuDishRequest, "ownerId");
 
         verify(validationHandler, times(1)).validate(menuDishRequest);
         verify(menuDishRequestMapper, times(1)).toMenuDish(menuDishRequest);
         verify(validateRestaurantOwnerId, times(1))
-                .validateRestaurantOwnerId(restaurant, ownerId);
+                .validateRestaurantOwnerId(restaurant, "ownerId");
         verify(menuDishServicePort, times(1)).saveMenuDish(menuDish);
     }
 
@@ -75,11 +76,25 @@ class MenuDishHandlerTest {
         doNothing().when(validationHandler).validate(menuDishUpdate);
         when(menuDishServicePort.findByIdMenuDish(menuDishUpdate.getId())).thenReturn(menuDish);
 
-        menuDishHandler.menuDishValidateAndUpdate(menuDishUpdate, ownerId);
+        menuDishHandler.menuDishValidateAndUpdate(menuDishUpdate, "ownerId");
 
         assertEquals(1500, menuDish.getPrice());
         assertEquals("Solo Hortalizas con aderezo", menuDish.getDescription());
         verify(validationHandler, times(1)).validate(menuDishUpdate);
+        verify(restaurantServicePort, times(1)).findByRestaurantId(restaurantId);
+
+    }
+
+    @Test
+    void assignStatusMenuDishHandlerTest() {
+        MenuDishStateRequestDto menuDishState = new MenuDishStateRequestDto(1L, false);
+        doNothing().when(validationHandler).validate(menuDishState);
+        when(menuDishServicePort.findByIdMenuDish(menuDishState.getId())).thenReturn(menuDish);
+
+        menuDishHandler.assignStatusMenuDish(menuDishState, "ownerId");
+
+        assertFalse(menuDish.isActive());
+        verify(validationHandler, times(1)).validate(menuDishState);
         verify(restaurantServicePort, times(1)).findByRestaurantId(restaurantId);
 
     }

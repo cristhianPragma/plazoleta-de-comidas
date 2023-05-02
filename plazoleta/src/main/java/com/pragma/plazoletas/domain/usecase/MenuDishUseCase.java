@@ -18,4 +18,5 @@ public class MenuDishUseCase implements IMenuDishServicePort {
     public MenuDish findByIdMenuDish(Long id) {
         return menuDishPersistentPort.findByIdMenuDish(id);
     }
+    
 }

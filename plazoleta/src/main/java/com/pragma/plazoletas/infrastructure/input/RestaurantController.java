@@ -35,6 +35,6 @@ public class RestaurantController {
     }
     @GetMapping("/prueba")
     public String prueba(){
-        return "Probando puesto sin seguridad";
+        return "Probando puesto sin seguridad restaurante";
     }
 }

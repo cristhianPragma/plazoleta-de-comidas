@@ -1,6 +1,7 @@
 package com.pragma.plazoletas.application.handler.impl;
 
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
+import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
 import com.pragma.plazoletas.application.handler.IMenuDishHandler;
 import com.pragma.plazoletas.application.handler.IValidateRestaurantOwnerId;
@@ -23,23 +24,34 @@ public class MenuDishHandler implements IMenuDishHandler {
     private final IValidateRestaurantOwnerId validateRestaurantOwnerId;
 
     @Override
-    public void menuDishValidateAndSave(MenuDishRequestDto menuDishRequestDto, Long ownerId) {
+    public void menuDishValidateAndSave(MenuDishRequestDto menuDishRequestDto, String token) {
         validationHandler.validate(menuDishRequestDto);
-        menuDishSave(menuDishRequestDto.getRestaurantId(), ownerId,
+        menuDishSave(menuDishRequestDto.getRestaurantId(), token,
                 menuDishRequestMapper.toMenuDish(menuDishRequestDto));
     }
     @Override
-    public void menuDishValidateAndUpdate(MenuDishUpdateDto menuDishUpdateDto, Long ownerId){
+    public void menuDishValidateAndUpdate(MenuDishUpdateDto menuDishUpdateDto, String token){
         validationHandler.validate(menuDishUpdateDto);
         MenuDish menuDish = menuDishServicePort.findByIdMenuDish(menuDishUpdateDto.getId());
         menuDish.setDescription(menuDishUpdateDto.getDescription());
         menuDish.setPrice(menuDishUpdateDto.getPrice());
-        menuDishSave(menuDish.getRestaurantId(), ownerId, menuDish);
+        menuDishSave(menuDish.getRestaurantId(), token, menuDish);
     }
-    private void menuDishSave(Long menuDishRestaurantId, Long ownerId, MenuDish menuDish){
+
+    @Override
+    public void assignStatusMenuDish(MenuDishStateRequestDto menuDishRequest, String token) {
+        validationHandler.validate(menuDishRequest);
+        MenuDish menuDish = menuDishServicePort.findByIdMenuDish(menuDishRequest.getId());
+        if (menuDish.isActive() != menuDishRequest.isActive()){
+            menuDish.setActive(menuDishRequest.isActive());
+            menuDishSave(menuDish.getRestaurantId(), token, menuDish);
+        }
+    }
+
+    private void menuDishSave(Long menuDishRestaurantId, String token, MenuDish menuDish){
         Restaurant restaurant =  restaurantServicePort
                 .findByRestaurantId(menuDishRestaurantId);
-        validateRestaurantOwnerId.validateRestaurantOwnerId(restaurant, ownerId);
+        validateRestaurantOwnerId.validateRestaurantOwnerId(restaurant, token);
         menuDishServicePort.saveMenuDish(menuDish);
     }
 }

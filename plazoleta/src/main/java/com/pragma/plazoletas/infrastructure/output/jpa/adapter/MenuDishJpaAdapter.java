@@ -34,4 +34,5 @@ public class MenuDishJpaAdapter implements IMenuDishPersistentPort {
         return menuDishEntityMapper.toMenuDishModel(menuDishRepository.findById(id).
                 orElseThrow(()->new  RequestException("Plato no encontrado", HttpStatus.NOT_FOUND)));
     }
+
 }

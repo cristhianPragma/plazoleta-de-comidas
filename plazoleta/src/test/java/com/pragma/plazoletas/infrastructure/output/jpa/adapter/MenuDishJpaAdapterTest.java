@@ -1,7 +1,6 @@
 package com.pragma.plazoletas.infrastructure.output.jpa.adapter;
 
 import com.pragma.plazoletas.domain.model.MenuDish;
-import com.pragma.plazoletas.domain.model.Restaurant;
 import com.pragma.plazoletas.infrastructure.exception.RequestException;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.CategoryMenuDishEntity;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.MenuDishEntity;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
