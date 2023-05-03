@@ -7,8 +7,11 @@ import com.pragma.plazoletas.infrastructure.output.jpa.entity.RestaurantEntity;
 import com.pragma.plazoletas.infrastructure.output.jpa.mapper.IRestaurantEntityMapper;
 import com.pragma.plazoletas.infrastructure.output.jpa.repository.IRestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -33,6 +36,13 @@ public class RestaurantJpaAdapter implements IRestaurantPersistentPort {
         return restaurantEntityMapper
                 .toRestaurantModel(repository.findById(restaurantId)
                 .orElseThrow(()->new RequestException("Restaurante no encontrado", HttpStatus.NOT_FOUND)));
+    }
+
+    @Override
+    public List<Restaurant> listAllRestaurantPaged(int pageSize, int pageNumber) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<RestaurantEntity>pagesRestaurantEntity = repository.findAll(pageRequest);
+        return restaurantEntityMapper.toRestautantList(pagesRestaurantEntity.getContent());
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,9 +29,9 @@ public class JwtService {
     }
 
     public List<SimpleGrantedAuthority> extractUserRole(String token){
-        List<Object> roleList = extractClaims(token, claims -> claims.get("role", List.class));
-        return roleList.stream()
-                .map(role -> new SimpleGrantedAuthority(role.toString()))
+        List<Map<String, String>> authorities = extractClaims(token, claims -> claims.get("role", List.class));
+        return authorities.stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.get("authority")))
                 .collect(Collectors.toList());
     }
 

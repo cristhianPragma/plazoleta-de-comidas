@@ -25,5 +25,6 @@ class IMenuDishCategoryRepositoryTest {
 
         assertTrue(categoryFound.isPresent());
         assertEquals(category.getName(), categoryFound.get().getName());
+
     }
 }

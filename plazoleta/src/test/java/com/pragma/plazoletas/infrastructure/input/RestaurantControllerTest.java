@@ -6,7 +6,6 @@ import com.pragma.plazoletas.application.handler.IRestaurantHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -36,6 +35,7 @@ class RestaurantControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private IRestaurantHandler restaurantHandler;
+    private final String token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJQcm9waW";
 
     @BeforeEach
     void setUp(){
@@ -51,13 +51,13 @@ class RestaurantControllerTest {
                 "cra 1 N 162", "1255666",
                 "http://img.png","1125555", 1l);
         doNothing().when(restaurantHandler)
-                .saveRestaurant(restaurantRequestDto);
+                .saveRestaurant(restaurantRequestDto, token);
 
         ResultActions response = mockMvc.perform(post("/restaurant/create")
+                .header("Authorization", "Bearer " + token.substring(7))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(restaurantRequestDto)));
-
-        verify(restaurantHandler, times(1)).saveRestaurant(restaurantRequestDto);
+        verify(restaurantHandler, times(1)).saveRestaurant(restaurantRequestDto,token);
         response.andDo(print())
                 .andExpect(status().isCreated());
     }
@@ -68,13 +68,13 @@ class RestaurantControllerTest {
                 "cra 1 N 162", "1255666",
                 "http://img.png","1125555", 1l);
         doNothing().when(restaurantHandler)
-                .saveRestaurant(restaurantRequestDto);
+                .saveRestaurant(restaurantRequestDto,token);
 
         ResultActions response = mockMvc.perform(post("/restaurant/create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(restaurantRequestDto)));
 
-        verify(restaurantHandler, never()).saveRestaurant(restaurantRequestDto);
+        verify(restaurantHandler, never()).saveRestaurant(restaurantRequestDto, token);
         response.andDo(print())
                 .andExpect(status().isForbidden());
     }

@@ -3,6 +3,9 @@ import com.pragma.plazoletas.domain.api.IMenuDishServicePort;
 import com.pragma.plazoletas.domain.model.MenuDish;
 import com.pragma.plazoletas.domain.spi.IMenuDishPersistentPort;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 @RequiredArgsConstructor
 public class MenuDishUseCase implements IMenuDishServicePort {
 
@@ -10,7 +13,6 @@ public class MenuDishUseCase implements IMenuDishServicePort {
 
     @Override
     public void saveMenuDish(MenuDish menuDish) {
-        menuDish.setActive(true);
         menuDishPersistentPort.saveMenuDish(menuDish);
     }
 
@@ -18,5 +20,5 @@ public class MenuDishUseCase implements IMenuDishServicePort {
     public MenuDish findByIdMenuDish(Long id) {
         return menuDishPersistentPort.findByIdMenuDish(id);
     }
-    
+
 }

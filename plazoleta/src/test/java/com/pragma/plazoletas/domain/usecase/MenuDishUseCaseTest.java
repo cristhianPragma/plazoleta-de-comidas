@@ -25,7 +25,7 @@ class MenuDishUseCaseTest {
     @BeforeEach
     void setUp(){
         menuDish = new MenuDish(1L,"Ensalada fria", 30000, "Ensalada con multiples verduras",
-                "http://Ensalada.jpg", 1,1L,false);
+                "http://Ensalada.jpg", 1,1L,true);
     }
 
     @Test

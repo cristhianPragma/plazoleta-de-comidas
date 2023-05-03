@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,8 +30,9 @@ public class RestaurantController {
             @ApiResponse(responseCode = "400", description = "Campo ingresado de manera incorrecta", content = @Content)
     })
     @PostMapping("/create")
-    public ResponseEntity<Void> saveRestaurant(@RequestBody RestaurantRequestDto restaurant) {
-        restaurantHandler.saveRestaurant(restaurant);
+    public ResponseEntity<Void> saveRestaurant(@RequestHeader("Authorization") String token,
+                                               @RequestBody RestaurantRequestDto restaurant) {
+        restaurantHandler.saveRestaurant(restaurant, token);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("/prueba")

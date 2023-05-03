@@ -19,12 +19,12 @@ public class BeanEntityConfigurationRestaurant {
     private final IRestaurantEntityMapper restaurantEntityMapper;
 
     @Bean
-    public IRestaurantPersistentPort restaurantPersitentPort(){
+    public IRestaurantPersistentPort restaurantPersistentPort(){
         return new RestaurantJpaAdapter(repository, restaurantEntityMapper);
     }
     @Bean
     public IRestaurantServicePort restaurantServicePort(){
-        return new RestaurantUseCase(restaurantPersitentPort());
+        return new RestaurantUseCase(restaurantPersistentPort());
     }
     @Bean
     public ErrorDecoder errorDecoder(){

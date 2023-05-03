@@ -1,10 +1,13 @@
 package com.pragma.plazoletas.infrastructure.output.jpa.mapper;
 
+import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
 import com.pragma.plazoletas.domain.model.Restaurant;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.RestaurantEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -49,6 +52,29 @@ class IRestaurantEntityMapperTest {
                 ()->assertEquals(restaurant.getNit(), restaurantEntity.getNit()),
                 ()->assertEquals(restaurant.getOwnerId(), restaurantEntity.getOwnerId())
 
+        );
+    }
+    @Test
+    void toRestaurantListMapperTest() {
+        List<RestaurantEntity> restaurantEntityList = List.of(
+                new RestaurantEntity(1L,"restaurante 1",
+                        "cra 1 N 162", "1255666",
+                        "http://img.png","1125555", 1l),
+                new RestaurantEntity(2L,"restaurante 2",
+                        "cra 1 N 162", "1255666",
+                        "http://img.png","1125555", 1l));
+
+        List<Restaurant>restaurantList = restaurantEntityMapper.toRestautantList(restaurantEntityList);
+
+        assertAll(
+                ()->assertEquals(restaurantEntityList.size(), restaurantList.size()),
+                ()->assertEquals(restaurantEntityList.get(0).getId(), restaurantList.get(0).getId()),
+                ()->assertEquals(restaurantEntityList.get(0).getName(), restaurantList.get(0).getName()),
+                ()->assertEquals(restaurantEntityList.get(0).getAddress(), restaurantList.get(0).getAddress()),
+                ()->assertEquals(restaurantEntityList.get(0).getRestaurantPhone(), restaurantList.get(0).getRestaurantPhone()),
+                ()->assertEquals(restaurantEntityList.get(0).getUrlLogo(), restaurantList.get(0).getUrlLogo()),
+                ()->assertEquals(restaurantEntityList.get(0).getNit(), restaurantList.get(0).getNit()),
+                ()->assertEquals(restaurantEntityList.get(0).getOwnerId(), restaurantList.get(0).getOwnerId())
         );
     }
 }

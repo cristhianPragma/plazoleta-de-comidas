@@ -32,24 +32,25 @@ class RestaurantHandlerTest {
     private RestaurantHandler restaurantHandler;
     @Test
     void saveRestaurantHandlerTest() {
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJQcm9waW";
         RestaurantRequestDto restaurantRequestDto = new RestaurantRequestDto("restaurante 1",
                 "cra 1 N 162", "1255666", "http://img.png",
                 "1125555", 1l);
         Restaurant restaurant;
 
         doNothing().when(validationHandler).validate(restaurantRequestDto);
-        doNothing().when(ownerValidation).validation(restaurantRequestDto.getOwnerId());
+        doNothing().when(ownerValidation).validation(restaurantRequestDto.getOwnerId(),  token);
         when(restaurantRequestMapper.toRestaurant(restaurantRequestDto))
                 .thenReturn(restaurant = new Restaurant(1l,"restaurante 1", "cra 1 N 162",
                         "1255666", "http://img.png", "1125555", 1l));
         doNothing().when(restaurantServicePort).saveRestaurant(restaurant);
 
-        restaurantHandler.saveRestaurant(restaurantRequestDto);
+        restaurantHandler.saveRestaurant(restaurantRequestDto, token);
 
         verify(validationHandler, times(1))
                 .validate(restaurantRequestDto);
         verify(ownerValidation, times(1))
-                .validation(restaurantRequestDto.getOwnerId());
+                .validation(restaurantRequestDto.getOwnerId(),token);
         verify(restaurantServicePort, times(1))
                 .saveRestaurant(restaurant);
         assertEquals(restaurantRequestDto.getName(), restaurant.getName());

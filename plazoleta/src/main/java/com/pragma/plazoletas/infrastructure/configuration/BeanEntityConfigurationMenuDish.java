@@ -1,10 +1,8 @@
 package com.pragma.plazoletas.infrastructure.configuration;
 
 import com.pragma.plazoletas.domain.api.IMenuDishServicePort;
-import com.pragma.plazoletas.domain.api.IRestaurantServicePort;
 import com.pragma.plazoletas.domain.spi.IMenuDishPersistentPort;;
 import com.pragma.plazoletas.domain.usecase.MenuDishUseCase;
-import com.pragma.plazoletas.domain.usecase.RestaurantUseCase;
 import com.pragma.plazoletas.infrastructure.output.jpa.adapter.MenuDishJpaAdapter;
 import com.pragma.plazoletas.infrastructure.output.jpa.mapper.IMenuDishEntityMapper;
 import com.pragma.plazoletas.infrastructure.output.jpa.repository.IMenuDishCategoryRepository;

@@ -26,8 +26,9 @@ public class MenuDishHandler implements IMenuDishHandler {
     @Override
     public void menuDishValidateAndSave(MenuDishRequestDto menuDishRequestDto, String token) {
         validationHandler.validate(menuDishRequestDto);
-        menuDishSave(menuDishRequestDto.getRestaurantId(), token,
-                menuDishRequestMapper.toMenuDish(menuDishRequestDto));
+        MenuDish menuDish =  menuDishRequestMapper.toMenuDish(menuDishRequestDto);
+        menuDish.setActive(true);
+        menuDishSave(menuDishRequestDto.getRestaurantId(), token, menuDish);
     }
     @Override
     public void menuDishValidateAndUpdate(MenuDishUpdateDto menuDishUpdateDto, String token){
