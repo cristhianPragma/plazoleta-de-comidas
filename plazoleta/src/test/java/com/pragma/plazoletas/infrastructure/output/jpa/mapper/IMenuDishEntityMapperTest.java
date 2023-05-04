@@ -1,6 +1,5 @@
 package com.pragma.plazoletas.infrastructure.output.jpa.mapper;
 
-import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.domain.model.MenuDish;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.CategoryMenuDishEntity;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.MenuDishEntity;
@@ -38,7 +37,7 @@ class IMenuDishEntityMapperTest {
         MenuDishEntity menuDishEntity = new MenuDishEntity(1L,"Ensalada fria", 30000,
                 "Ensalada con multiples verduras",
                 "http://Ensalada.jpg",  new CategoryMenuDishEntity(1,"Ensalda",
-                "Verduras y hortalizas"),new RestaurantEntity(1L,"restaurante 1",
+                "Verduras y hortalizas", null),new RestaurantEntity(1L,"restaurante 1",
                 "cra 1 N 162", "1255666", "http://img.png",
                 "1125555", 2L), true);
 

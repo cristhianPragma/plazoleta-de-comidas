@@ -48,7 +48,7 @@ class MenuDishJpaAdapterTest {
          menuDishEntity = new MenuDishEntity(1L,"Ensalada fria", 30000,
                 "Ensalada con multiples verduras",
                 "http://Ensalada.jpg",  new CategoryMenuDishEntity(1,"Ensalda",
-                "Verduras y hortalizas"),new RestaurantEntity(1L,"restaurante 1",
+                "Verduras y hortalizas", null),new RestaurantEntity(1L,"restaurante 1",
                 "cra 1 N 162", "1255666", "http://img.png",
                 "1125555", 2L), true);
     }

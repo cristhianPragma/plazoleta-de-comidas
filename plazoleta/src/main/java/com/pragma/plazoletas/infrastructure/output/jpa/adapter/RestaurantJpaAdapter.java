@@ -9,6 +9,7 @@ import com.pragma.plazoletas.infrastructure.output.jpa.repository.IRestaurantRep
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
@@ -40,8 +41,10 @@ public class RestaurantJpaAdapter implements IRestaurantPersistentPort {
 
     @Override
     public List<Restaurant> listAllRestaurantPaged(int pageSize, int pageNumber) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("name"));
         Page<RestaurantEntity>pagesRestaurantEntity = repository.findAll(pageRequest);
+        if (pagesRestaurantEntity.getContent().isEmpty())
+            throw new RequestException("Lista vacia", HttpStatus.NO_CONTENT);
         return restaurantEntityMapper.toRestautantList(pagesRestaurantEntity.getContent());
     }
 

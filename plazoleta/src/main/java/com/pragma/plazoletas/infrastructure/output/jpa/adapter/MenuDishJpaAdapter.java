@@ -11,6 +11,8 @@ import com.pragma.plazoletas.infrastructure.output.jpa.repository.IRestaurantRep
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class MenuDishJpaAdapter implements IMenuDishPersistentPort {
     private final IMenuDishRepository menuDishRepository;
@@ -33,6 +35,10 @@ public class MenuDishJpaAdapter implements IMenuDishPersistentPort {
     public MenuDish findByIdMenuDish(Long id) {
         return menuDishEntityMapper.toMenuDishModel(menuDishRepository.findById(id).
                 orElseThrow(()->new  RequestException("Plato no encontrado", HttpStatus.NOT_FOUND)));
+    }
+    @Override
+    public List<MenuDish> listMenuDish(int restaurantId, int pageSize, int pageNumber) {
+        return null;
     }
 
 }

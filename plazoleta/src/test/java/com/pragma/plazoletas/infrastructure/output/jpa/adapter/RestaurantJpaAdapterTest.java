@@ -10,7 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,5 +76,23 @@ class RestaurantJpaAdapterTest {
         verify(restaurantEntityMapper, never()).toEntity(any(Restaurant.class));
         verify(repository, never()).save(any(RestaurantEntity.class));
     }
+    @Test
+    void listAllRestaurantPaged() {
+        int pageSize =2,pageNumber=0;
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("name"));
+        List<Page<RestaurantEntity>> pages = new ArrayList<>();
+        List<RestaurantEntity> content = new ArrayList<>();
+        content.add(new RestaurantEntity());
+        content.add(new RestaurantEntity());
+        pages.add(new PageImpl<RestaurantEntity>(content, pageRequest, content.size()));
+        when(repository.findAll(pageRequest)).thenReturn(pages.get(0));
+        when(restaurantEntityMapper.toRestautantList(pages.get(0).getContent()))
+                .thenReturn(List.of(new Restaurant(), new Restaurant()));
 
+        List<Restaurant>restaurantsResponse = restaurantJpaAdapter.listAllRestaurantPaged(pageSize, pageNumber);
+        verify(repository, times(1)).findAll(pageRequest);
+        verify(restaurantEntityMapper, times(1))
+                .toRestautantList(pages.get(0).getContent());
+        assertEquals(pageSize, restaurantsResponse.size());
+    }
 }

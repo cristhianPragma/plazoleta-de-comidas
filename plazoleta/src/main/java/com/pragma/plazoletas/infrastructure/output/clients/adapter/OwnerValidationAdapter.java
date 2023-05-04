@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OwnerValidationAdapter implements IOwnerValidation {
     private final JwtService jwtService;
-
     @Override
     public void validation(Long id, String token) {
-        int OWNER_ROL_ID = 2;
+        final int OWNER_ROL_ID = 2;
+        final String URL ="http://localhost:8081";
         RequestInterceptor requestInterceptor;
         String jwt = jwtService.parseJwt(token);
         if (!jwtService.isValidToken(jwt))
@@ -38,13 +38,10 @@ public class OwnerValidationAdapter implements IOwnerValidation {
                 .requestInterceptor(requestInterceptor)
                 .errorDecoder(new ExceptionFeignClient());
 
-        IUserFeignClient userFeignClient = builder.target(IUserFeignClient.class, "http://localhost:8081");
+        IUserFeignClient userFeignClient = builder.target(IUserFeignClient.class, URL);
         RoleResponseDto roleResponseDto = userFeignClient.findByRoleId(id);
         if (roleResponseDto.getId() != OWNER_ROL_ID)
             throw  new RequestException("El usuario ingresado no tiene el rol, para esta acción",
                     HttpStatus.BAD_REQUEST);
     }
-
-
-
 }

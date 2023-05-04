@@ -8,4 +8,5 @@ import java.util.List;
 public interface IMenuDishPersistentPort {
     void saveMenuDish(MenuDish menuDish);
     MenuDish findByIdMenuDish(Long id);
+    List<MenuDish>listMenuDish(int restaurantId, int pageSize, int pageNumber);
 }

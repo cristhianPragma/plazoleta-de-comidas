@@ -2,6 +2,7 @@ package com.pragma.plazoletas.infrastructure.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
+import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
 import com.pragma.plazoletas.application.handler.IRestaurantHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +16,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
+import java.util.List;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.CoreMatchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -77,5 +82,24 @@ class RestaurantControllerTest {
         verify(restaurantHandler, never()).saveRestaurant(restaurantRequestDto, token);
         response.andDo(print())
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void ListRestaurantControllerSuccessTest() throws Exception {
+        int pageSize =2,pageNumber=0;
+        List<RestauranListResponseDto>responseListDto =
+                List.of(new RestauranListResponseDto(), new RestauranListResponseDto());
+
+        when(restaurantHandler.restauranListResponseDtos(pageSize,pageNumber))
+              .thenReturn(responseListDto);
+
+        ResultActions response = mockMvc
+                .perform(get("/restaurant/restaurantList/"+pageNumber+"/"+pageSize));
+
+        verify(restaurantHandler, times(1))
+                .restauranListResponseDtos(pageSize, pageNumber);
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(responseListDto.size())));
     }
 }

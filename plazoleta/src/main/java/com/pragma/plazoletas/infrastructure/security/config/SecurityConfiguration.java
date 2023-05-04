@@ -23,7 +23,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
-                .authorizeHttpRequests().and()
                 .authorizeHttpRequests().requestMatchers("/restaurant/create")
                 .hasAnyAuthority("Administrador").and()
                 .authorizeHttpRequests().requestMatchers("/restaurant/menudish", "/restaurant/statemenudish")

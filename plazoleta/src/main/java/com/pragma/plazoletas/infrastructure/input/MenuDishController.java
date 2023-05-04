@@ -4,6 +4,7 @@ import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
 import com.pragma.plazoletas.application.handler.IMenuDishHandler;
+import com.pragma.plazoletas.infrastructure.output.jpa.repository.IMenuDishCategoryRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,11 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/restaurant")
 public class MenuDishController {
     private final IMenuDishHandler menuDishHandler;
+    private final IMenuDishCategoryRepository categoryRepository;
 
-    public MenuDishController(IMenuDishHandler menuDishHandler) {
+    public MenuDishController(IMenuDishHandler menuDishHandler, IMenuDishCategoryRepository categoryRepository) {
         this.menuDishHandler = menuDishHandler;
+        this.categoryRepository = categoryRepository;
     }
-
 
     @Operation(summary = "Agregar Plato, validando rol propietario")
     @ApiResponses(value = {
@@ -70,6 +72,7 @@ public class MenuDishController {
 
     @GetMapping("/prueba2")
     public String prueba2(){
+        System.out.println(categoryRepository.findAll());
         return "Probando puesto sin seguridad plato";
     }
 }
