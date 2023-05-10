@@ -3,11 +3,13 @@ package com.pragma.plazoletas.application.handler.impl;
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
+import com.pragma.plazoletas.application.dto.response.MenuDishResponseDto;
 import com.pragma.plazoletas.application.handler.IValidateRestaurantOwnerId;
 import com.pragma.plazoletas.application.handler.IValidationHandler;
 import com.pragma.plazoletas.application.mapper.IMenuDishRequestMapper;
 import com.pragma.plazoletas.domain.api.IMenuDishServicePort;
 import com.pragma.plazoletas.domain.api.IRestaurantServicePort;
+import com.pragma.plazoletas.domain.model.Category;
 import com.pragma.plazoletas.domain.model.MenuDish;
 import com.pragma.plazoletas.domain.model.Restaurant;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -45,7 +49,7 @@ class MenuDishHandlerTest {
     void SetUp(){
         menuDish = new MenuDish(1L,"Ensalada fria", 30000,
                 "Ensalada con multiples verduras",
-                "http://Ensalada.jpg", 1,1L, true);
+                "http://Ensalada.jpg", new Category(1, "Ensalada", "Ensaladas"),1L, true);
         restaurant = new Restaurant();
     }
     @Test
@@ -97,5 +101,23 @@ class MenuDishHandlerTest {
         verify(validationHandler, times(1)).validate(menuDishState);
         verify(restaurantServicePort, times(1)).findByRestaurantId(restaurantId);
 
+    }
+    @Test
+    void listMenuDishResponseHandlerTest(){
+        Long  restaurantId = 1L;
+        int pageSize =1, pageNumber=1;
+        List<MenuDish>menuDishList = List.of(new MenuDish());
+
+        when(menuDishServicePort.listMenuDish(restaurantId, pageSize, pageNumber))
+                .thenReturn(menuDishList);
+        when(menuDishRequestMapper.toMenuDishResponseDto(menuDishList))
+                .thenReturn(List.of(new MenuDishResponseDto()));
+
+        List<MenuDishResponseDto>listResponseDto = menuDishHandler
+                .listMenuDishResponse(restaurantId,pageSize, pageNumber);
+
+        verify(menuDishServicePort, times(1)).listMenuDish(restaurantId, pageSize, pageNumber);
+        verify(menuDishRequestMapper, times(1)).toMenuDishResponseDto(menuDishList);
+        assertEquals(1, listResponseDto.size());
     }
 }

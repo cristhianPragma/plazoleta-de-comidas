@@ -1,5 +1,6 @@
 package com.pragma.plazoleta.application.mapper;
 
+import com.pragma.plazoleta.application.dto.request.UserEmployeeRequestDto;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.domain.model.User;
 import org.mapstruct.Mapper;
@@ -10,4 +11,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IUserRequestMapper {
     User toUser(UserRequestDto userRequestDto);
+    UserRequestDto toUserDto(UserEmployeeRequestDto userEmployeeRequestDto);
 }

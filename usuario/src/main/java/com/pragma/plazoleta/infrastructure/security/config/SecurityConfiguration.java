@@ -27,7 +27,7 @@ public class SecurityConfiguration {
         return http.csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
                 .authorizeHttpRequests()
-                .requestMatchers("/users/login", "/users/customer").permitAll()
+                .requestMatchers("/users/login", "/users/customer","/swagger-ui/**","/v3/**").permitAll()
                 .and()
                 .authorizeHttpRequests().requestMatchers("/users/administrator")
                 .hasAnyAuthority("Administrador").and()

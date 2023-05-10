@@ -1,7 +1,7 @@
 package com.pragma.plazoletas.application.handler.impl;
 
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
+import com.pragma.plazoletas.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoletas.application.handler.IOwnerValidation;
 import com.pragma.plazoletas.application.handler.IRestaurantHandler;
 import com.pragma.plazoletas.application.handler.IValidationHandler;
@@ -28,8 +28,8 @@ public class RestaurantHandler implements IRestaurantHandler {
         restaurantServicePort.saveRestaurant(restaurant);
     }
 
-    public List<RestauranListResponseDto> restauranListResponseDtos(int pageSize, int pageNumber){
+    public List<RestaurantResponseDto> restauranListResponseDtos(int pageSize, int pageNumber){
          return restaurantRequestMapper
-                 .toListRestauranDto(restaurantServicePort.listAllRestaurantPaged(pageSize, pageNumber));
+                 .toListRestaurant(restaurantServicePort.listAllRestaurantPaged(pageSize, pageNumber));
     }
 }

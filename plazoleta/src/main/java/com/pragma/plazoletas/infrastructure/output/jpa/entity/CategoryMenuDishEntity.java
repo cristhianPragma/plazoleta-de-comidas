@@ -33,7 +33,4 @@ public class CategoryMenuDishEntity {
     @Column(name = "descripcion", length = 100)
     private String description;
 
-    @OneToMany(mappedBy ="category", fetch = FetchType.EAGER)
-    private List<MenuDishEntity> menuDishEntities;
-
 }

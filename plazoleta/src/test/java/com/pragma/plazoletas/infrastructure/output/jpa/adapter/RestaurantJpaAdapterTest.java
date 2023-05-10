@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +64,12 @@ class RestaurantJpaAdapterTest {
         when(repository.findByIdOrNit(existingRestaurant.getId(), existingRestaurant.getNit()))
                 .thenReturn(Optional.of(new RestaurantEntity(1L,"restaurante 1",
                         "cra1 este #162-46", "1255666",
-                        "http://img.png","1125555", 1l)));
+                        "http://img.png","1125555", 1L)));
 
         RequestException exception = assertThrows(RequestException.class,
                 ()->restaurantJpaAdapter.saveRestaurant(new Restaurant(1L,"restaurante 1",
                         "cra1 este #162-46", "1255666",
-                        "http://img.png","1125555", 1l)));
+                        "http://img.png","1125555", 1L)));
 
         assertEquals("Este restaurante ya existe", exception.getMessage());
         verify(restaurantEntityMapper, never()).toEntity(any(Restaurant.class));

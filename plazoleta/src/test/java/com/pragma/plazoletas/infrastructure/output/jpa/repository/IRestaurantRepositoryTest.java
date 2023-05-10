@@ -30,11 +30,10 @@ class IRestaurantRepositoryTest {
         RestaurantEntity restaurant = new RestaurantEntity(restaurantId,"restaurante 1",
                 "cra 1 N 162", "1255666",
                 "http://img.png","1125555", ownerId);
-        restaurantRepository.save(restaurant);
-
+        id = restaurantRepository.save(restaurant).getId()+"";
+        System.out.println(restaurant.getId());
         Optional<RestaurantEntity> restaurantFound= restaurantRepository
                 .findByIdOrNit(Long.valueOf(id), nit);
-
         assertTrue(restaurantFound.isPresent());
 
     }

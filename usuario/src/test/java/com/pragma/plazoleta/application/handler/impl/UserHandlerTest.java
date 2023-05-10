@@ -46,7 +46,7 @@ class UserHandlerTest {
                 .thenReturn(user = new User(1l,"Juan","125588","Martinez", "6707941",
                         "juan@gmail.com","Usuario1234*", null));
         when(passwordEncoder.encode(user.getPassword())).thenReturn(PASSWORD);
-        doNothing().when(userServicePort).saveUser(user, 1);
+        when(userServicePort.saveUser(user, 1)).thenReturn(1L);
 
         userHandler.saveUser(userRequestDto, 1);
 

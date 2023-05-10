@@ -1,7 +1,7 @@
 package com.pragma.plazoletas.application.mapper;
 
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
+import com.pragma.plazoletas.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoletas.domain.model.Restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +41,8 @@ class IRestaurantRequestMapperTest {
                         "http://img.png","1125555", 1l));
 
 
-        List<RestauranListResponseDto>restaurantListResponse =
-                restaurantRequestMapper.toListRestauranDto(restaurantList);
+        List<RestaurantResponseDto>restaurantListResponse =
+                restaurantRequestMapper.toListRestaurant(restaurantList);
         assertAll(
                 ()->assertEquals(restaurantList.size(), restaurantListResponse.size()),
                 ()->assertEquals(restaurantList.get(0).getName(), restaurantListResponse.get(0).getName()),

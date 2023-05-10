@@ -3,6 +3,7 @@ package com.pragma.plazoletas.infrastructure.input;
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
+import com.pragma.plazoletas.application.dto.response.MenuDishResponseDto;
 import com.pragma.plazoletas.application.handler.IMenuDishHandler;
 import com.pragma.plazoletas.infrastructure.output.jpa.repository.IMenuDishCategoryRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,12 +13,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/restaurant")
@@ -69,10 +73,17 @@ public class MenuDishController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @GetMapping("/prueba2")
-    public String prueba2(){
-        System.out.println(categoryRepository.findAll());
-        return "Probando puesto sin seguridad plato";
+    @Operation(summary = "Listado de platos por restaurante, páginado y agrupados por categoría")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Estado modificado", content = @Content),
+            @ApiResponse(responseCode = "204", description = "Lista vacia", content = @Content),
+            @ApiResponse(responseCode = "403", description = "No autorizado", content = @Content)
+    })
+    @GetMapping("/menudishlist/{restaurantId}/{size}/{page}")
+    public ResponseEntity<List<MenuDishResponseDto>> menuDishList(@PathVariable Long restaurantId,
+                                                                  @PathVariable int size,
+                                                                  @PathVariable int page){
+        return new ResponseEntity<>(menuDishHandler
+                .listMenuDishResponse(restaurantId,size,page), HttpStatus.OK);
     }
 }

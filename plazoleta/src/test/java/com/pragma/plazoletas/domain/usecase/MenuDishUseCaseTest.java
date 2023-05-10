@@ -1,5 +1,6 @@
 package com.pragma.plazoletas.domain.usecase;
 
+import com.pragma.plazoletas.domain.model.Category;
 import com.pragma.plazoletas.domain.model.MenuDish;
 import com.pragma.plazoletas.domain.spi.IMenuDishPersistentPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -25,7 +29,7 @@ class MenuDishUseCaseTest {
     @BeforeEach
     void setUp(){
         menuDish = new MenuDish(1L,"Ensalada fria", 30000, "Ensalada con multiples verduras",
-                "http://Ensalada.jpg", 1,1L,true);
+                "http://Ensalada.jpg", new Category(1,"Ensalda", "Ensaldas"),1L,true);
     }
 
     @Test
@@ -46,5 +50,17 @@ class MenuDishUseCaseTest {
 
         assertEquals(menuDish.getId(), menuDishFound.getId());
         assertEquals(menuDish.getName(), menuDishFound.getName());
+    }
+
+    @Test
+    public void listMenuDishUseCaseTest() {
+        Long restaurantId =1L;
+        int pageSize =1, pageNumber=1;
+        when(menuDishPersistentPort.listMenuDish(restaurantId, pageSize, pageNumber))
+                .thenReturn(List.of(new MenuDish()));
+        List<MenuDish> listTest = menuDishUseCase.listMenuDish(restaurantId, pageSize, pageNumber);
+        verify(menuDishPersistentPort, times(1))
+                .listMenuDish(restaurantId, pageSize, pageNumber);
+        assertEquals(1, listTest.size());
     }
 }

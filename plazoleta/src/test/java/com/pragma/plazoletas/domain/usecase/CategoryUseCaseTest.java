@@ -21,8 +21,7 @@ class CategoryUseCaseTest {
     @Test
     void findByIdCategoryUseCaseTest() {
         int categoryId = 1;
-        Category category = new Category(categoryId,"Ensaladas",
-                "hortalizas, verduras, mezcladas y aderezadas");
+        Category category = new Category(categoryId,"Ensaladas", "Ensaladas");
         when(categoryPersistentPort.findById(categoryId)).thenReturn(category);
 
         Category categoryFound = categoryUseCase.findById(categoryId);

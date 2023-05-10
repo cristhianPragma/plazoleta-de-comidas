@@ -14,4 +14,5 @@ public class MenuDishResponseDto {
     private String description;
     private int price;
     private String urlImage;
+    private String categoryName;
 }

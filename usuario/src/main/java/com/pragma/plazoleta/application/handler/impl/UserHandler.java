@@ -1,7 +1,10 @@
 package com.pragma.plazoleta.application.handler.impl;
 
+import com.pragma.plazoleta.application.dto.request.EmployeeRequestDto;
+import com.pragma.plazoleta.application.dto.request.UserEmployeeRequestDto;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.handler.IPasswordEncoder;
+import com.pragma.plazoleta.application.handler.ISaveEmployee;
 import com.pragma.plazoleta.application.handler.IUserHandler;
 import com.pragma.plazoleta.application.handler.IValidationHandler;
 import com.pragma.plazoleta.application.mapper.IUserRequestMapper;
@@ -20,14 +23,24 @@ public class UserHandler implements IUserHandler {
     private final IUserRequestMapper  userRequestMapper;
     private final IPasswordEncoder passwordEncoder;
     private final IValidationHandler validationHandler;
+    private final ISaveEmployee saveEmployee;
     @Override
-    public void saveUser(UserRequestDto userRequestDto, int idAssignRole) {
+    public Long saveUser(UserRequestDto userRequestDto, int idAssignRole) {
         validationHandler.validate(userRequestDto);
         User user = userRequestMapper.toUser(userRequestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userServicePort.saveUser(user,idAssignRole);
+        return userServicePort.saveUser(user,idAssignRole);
     }
-
+    @Transactional
+    @Override
+    public void saveEmployee(UserEmployeeRequestDto userEmployeeRequestDto, int idAssignRole, String token){
+        validationHandler.validate(userEmployeeRequestDto);
+        UserRequestDto userRequestDto = userRequestMapper.toUserDto(userEmployeeRequestDto);
+        Long employeeId = saveUser(userRequestDto, idAssignRole);
+        EmployeeRequestDto employeeRequestDto =
+                new EmployeeRequestDto(userEmployeeRequestDto.getRestaurantId(), employeeId);
+        saveEmployee.saveEmployeeRestaurant(employeeRequestDto, token);
+    }
     @Override
     public int roleIdFindUserId(Long userId) {
         return userServicePort.roleFindByUserId(userId);

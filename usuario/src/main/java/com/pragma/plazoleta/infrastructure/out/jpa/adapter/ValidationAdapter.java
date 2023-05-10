@@ -13,14 +13,14 @@ import java.util.Set;
 @Service
 public class ValidationAdapter implements IValidationHandler {
     @Override
-    public void validate(UserRequestDto userRequestDto) {
-        if (userRequestDto == null)
-            throw new RequestException("El usuario no puede ser nulo", HttpStatus.BAD_REQUEST);
+    public <T> void validate(T requestDto) {
+        if (requestDto == null)
+            throw new RequestException("El request enviado es nulo", HttpStatus.BAD_REQUEST);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<UserRequestDto>> violations = validator.validate(userRequestDto);
+        Set<ConstraintViolation<T>> violations = validator.validate(requestDto);
         if (!violations.isEmpty()) {
-            ConstraintViolation<UserRequestDto> violation = violations.iterator().next();
+            ConstraintViolation<T> violation = violations.iterator().next();
             throw new RequestException(violation.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

@@ -1,15 +1,14 @@
 package com.pragma.plazoletas.infrastructure.input;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
+import com.pragma.plazoletas.application.dto.response.MenuDishResponseDto;
 import com.pragma.plazoletas.application.handler.impl.MenuDishHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -19,15 +18,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
+import java.util.List;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -160,6 +162,29 @@ class MenuDishControllerTest {
         verify(menuDishHandler, never()).assignStatusMenuDish(menuDishDto, token);
         response.andDo(print())
                 .andExpect(status().isForbidden());
+    }
+    @Test
+    @WithMockUser(username = "ana", password = "Ana1234*", authorities = "Cliente")
+    void listMenuDishControllerTest() throws Exception {
+        Long restaurantId = 1L;
+        int size =3,  page=1;
+        List<MenuDishResponseDto>menuDishResponseDto =List.of(
+                new MenuDishResponseDto("Arroz con pollo", "Arroz con multiples ingredientes",
+                        15000,"http://arrozp.png", "Corriente"),
+                new MenuDishResponseDto("Arroz con leche", "Arroz con leche",
+                        6000,"http://arrozL.png", "Postre"),
+                new MenuDishResponseDto("Arroz paisa", "Arroz con carne",
+                        15000,"http://arrozp.png", "Corriente"));
+        when(menuDishHandler.listMenuDishResponse(restaurantId, size, page))
+                .thenReturn(menuDishResponseDto);
+
+        ResultActions response = mockMvc
+                .perform(get("/restaurant/menudishlist/"+restaurantId+"/"+size+"/"+page)
+                .header("Authorization", "Bearer " + token));
+
+        response.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(menuDishResponseDto.size())));
     }
 
 }

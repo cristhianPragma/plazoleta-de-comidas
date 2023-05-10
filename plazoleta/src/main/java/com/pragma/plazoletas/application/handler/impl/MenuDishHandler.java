@@ -3,6 +3,7 @@ package com.pragma.plazoletas.application.handler.impl;
 import com.pragma.plazoletas.application.dto.request.MenuDishRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishStateRequestDto;
 import com.pragma.plazoletas.application.dto.request.MenuDishUpdateDto;
+import com.pragma.plazoletas.application.dto.response.MenuDishResponseDto;
 import com.pragma.plazoletas.application.handler.IMenuDishHandler;
 import com.pragma.plazoletas.application.handler.IValidateRestaurantOwnerId;
 import com.pragma.plazoletas.application.handler.IValidationHandler;
@@ -13,6 +14,8 @@ import com.pragma.plazoletas.domain.model.MenuDish;
 import com.pragma.plazoletas.domain.model.Restaurant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,11 @@ public class MenuDishHandler implements IMenuDishHandler {
             menuDish.setActive(menuDishRequest.isActive());
             menuDishSave(menuDish.getRestaurantId(), token, menuDish);
         }
+    }
+    @Override
+    public List<MenuDishResponseDto> listMenuDishResponse(Long  restaurantId, int pageSize, int pageNumber){
+        return menuDishRequestMapper.toMenuDishResponseDto(
+                menuDishServicePort.listMenuDish(restaurantId, pageSize, pageNumber));
     }
 
     private void menuDishSave(Long menuDishRestaurantId, String token, MenuDish menuDish){

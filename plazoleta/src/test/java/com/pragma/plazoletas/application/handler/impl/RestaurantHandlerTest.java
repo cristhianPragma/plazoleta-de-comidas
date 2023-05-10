@@ -1,7 +1,7 @@
 package com.pragma.plazoletas.application.handler.impl;
 
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
+import com.pragma.plazoletas.application.dto.response.RestaurantResponseDto;
 import com.pragma.plazoletas.application.handler.IOwnerValidation;
 import com.pragma.plazoletas.application.handler.IValidationHandler;
 import com.pragma.plazoletas.application.mapper.IRestaurantRequestMapper;
@@ -64,16 +64,16 @@ class RestaurantHandlerTest {
         List<Restaurant>restaurantsModel = List.of(new Restaurant(), new Restaurant());
         when(restaurantServicePort.listAllRestaurantPaged(pageSize, pageNumber))
                 .thenReturn(restaurantsModel);
-        when(restaurantRequestMapper.toListRestauranDto(restaurantsModel))
-                .thenReturn(List.of(new RestauranListResponseDto(), new RestauranListResponseDto()));
+        when(restaurantRequestMapper.toListRestaurant(restaurantsModel))
+                .thenReturn(List.of(new RestaurantResponseDto(), new RestaurantResponseDto()));
 
-        List<RestauranListResponseDto>responseRestaurantsDto = restaurantHandler
+        List<RestaurantResponseDto>responseRestaurantsDto = restaurantHandler
                 .restauranListResponseDtos(pageSize,pageNumber);
 
         verify(restaurantServicePort, times(1))
                 .listAllRestaurantPaged(pageSize, pageNumber);
         verify(restaurantRequestMapper, times(1))
-                .toListRestauranDto(restaurantsModel);
+                .toListRestaurant(restaurantsModel);
         assertEquals(pageSize, responseRestaurantsDto.size());
     }
 }

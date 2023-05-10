@@ -21,4 +21,9 @@ public class MenuDishUseCase implements IMenuDishServicePort {
         return menuDishPersistentPort.findByIdMenuDish(id);
     }
 
+    @Override
+    public List<MenuDish> listMenuDish(Long restaurantId, int pageSize, int pageNumber) {
+        return menuDishPersistentPort.listMenuDish(restaurantId, pageSize, pageNumber);
+    }
+
 }

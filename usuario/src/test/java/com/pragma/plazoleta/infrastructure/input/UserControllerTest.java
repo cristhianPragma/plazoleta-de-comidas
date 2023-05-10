@@ -2,6 +2,7 @@ package com.pragma.plazoleta.infrastructure.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.plazoleta.application.dto.request.LoginRequest;
+import com.pragma.plazoleta.application.dto.request.UserEmployeeRequestDto;
 import com.pragma.plazoleta.application.dto.request.UserRequestDto;
 import com.pragma.plazoleta.application.dto.response.JwtResponse;
 import com.pragma.plazoleta.application.handler.IUserHandler;
@@ -59,8 +60,7 @@ class UserControllerTest {
     @Test
     void saveOwnerControllerSuccessResponseTest() throws Exception {
         idAssignRole =2;
-        doNothing().when(userHandler)
-                .saveUser(userRequestDto, idAssignRole);
+       when(userHandler.saveUser(userRequestDto, idAssignRole)).thenReturn(1L);
 
         ResultActions response = mockMvc.perform(post("/users/administrator")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -76,8 +76,7 @@ class UserControllerTest {
     @Test
     void saveOwnerControllerForbiddenResponseTest() throws Exception {
         idAssignRole =2;
-        doNothing().when(userHandler)
-                .saveUser(userRequestDto, idAssignRole);
+        when(userHandler.saveUser(userRequestDto, idAssignRole)).thenReturn(1L);
 
         ResultActions response = mockMvc.perform(post("/users/administrator")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,31 +92,38 @@ class UserControllerTest {
     @Test
     void saveEmployeeControllerSuccessTest() throws Exception {
         idAssignRole =3;
-        doNothing().when(userHandler)
-                .saveUser(userRequestDto, idAssignRole);
+        String token ="Token";
+        UserEmployeeRequestDto userEmployeeRequestDto = new UserEmployeeRequestDto(
+                "Carlos", "564488", "Dias",
+                "6704985", "carlos@gmail.com", "Carlos1234*",1L);
+
+        doNothing().when(userHandler).saveEmployee(userEmployeeRequestDto, idAssignRole,token);
 
         ResultActions response = mockMvc.perform(post("/users/owner")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userRequestDto)));
+                .content(objectMapper.writeValueAsString(userEmployeeRequestDto)));
 
-        verify(userHandler, times(1)).saveUser(userRequestDto, idAssignRole);
         response.andDo(print())
                 .andExpect(status().isCreated());
-
     }
 
     @WithMockUser(username = "ana", password = "Ana1234*", authorities = "Administrador")
     @Test
     void saveEmployeeControllerForbiddenTest() throws Exception {
         idAssignRole =3;
-        doNothing().when(userHandler)
-                .saveUser(userRequestDto, idAssignRole);
+        String token ="Token";
+        UserEmployeeRequestDto userEmployeeRequestDto = new UserEmployeeRequestDto(
+                "Carlos", "564488", "Dias",
+                "6704985", "carlos@gmail.com", "Carlos1234*",1L);
+
+        doNothing().when(userHandler).saveEmployee(userEmployeeRequestDto, idAssignRole,token);
 
         ResultActions response = mockMvc.perform(post("/users/owner")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userRequestDto)));
 
-        verify(userHandler, never()).saveUser(userRequestDto, idAssignRole);
+        verify(userHandler, never()).saveEmployee(userEmployeeRequestDto, idAssignRole,token);
         response.andDo(print())
                 .andExpect(status().isForbidden());
 
@@ -144,8 +150,7 @@ class UserControllerTest {
     @Test
     void saveCustomerControllerSuccessTest() throws Exception {
         idAssignRole =4;
-        doNothing().when(userHandler)
-                .saveUser(userRequestDto, idAssignRole);
+        when(userHandler.saveUser(userRequestDto, idAssignRole)).thenReturn(1L);
 
         ResultActions response = mockMvc.perform(post("/users/customer")
                 .contentType(MediaType.APPLICATION_JSON)

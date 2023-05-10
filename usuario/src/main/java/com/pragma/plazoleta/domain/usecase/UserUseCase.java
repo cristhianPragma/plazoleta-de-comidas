@@ -15,9 +15,9 @@ public class UserUseCase implements IUserServicePort {
     }
 
     @Override
-    public void saveUser(User user,  int idAssignRole) {
+    public Long saveUser(User user,  int idAssignRole) {
         user.setRole(rolServicePort.findById(idAssignRole));
-        userPersistencePort.saveUser(user);
+        return userPersistencePort.saveUser(user).getId();
     }
 
     @Override

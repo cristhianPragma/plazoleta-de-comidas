@@ -9,5 +9,5 @@ import java.util.List;
 public interface IMenuDishServicePort {
     void saveMenuDish(MenuDish menuDish);
     MenuDish findByIdMenuDish(Long id);
-    List<MenuDish>listMenuDish(int restaurantId, int pageSize, int pageNumber);
+    List<MenuDish>listMenuDish(Long restaurantId, int pageSize, int pageNumber);
 }

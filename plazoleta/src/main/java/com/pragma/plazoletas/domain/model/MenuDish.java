@@ -15,7 +15,7 @@ public class MenuDish {
     private int price;
     private String description;
     private String urlImage;
-    private Integer categoryId;
+    private Category category;
     private Long restaurantId;
     private boolean active;
 }

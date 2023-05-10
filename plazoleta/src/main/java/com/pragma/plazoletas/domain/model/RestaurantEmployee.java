@@ -1,4 +1,4 @@
-package com.pragma.plazoletas.application.dto.response;
+package com.pragma.plazoletas.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RestauranListResponseDto {
-    private String name;
-    private String urlLogo;
+public class RestaurantEmployee {
+    private Long restaurantId;
+    private Long userId;
 }

@@ -1,6 +1,5 @@
 package com.pragma.plazoletas.infrastructure.output.jpa.mapper;
 
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
 import com.pragma.plazoletas.domain.model.Restaurant;
 import com.pragma.plazoletas.infrastructure.output.jpa.entity.RestaurantEntity;
 import org.junit.jupiter.api.Test;

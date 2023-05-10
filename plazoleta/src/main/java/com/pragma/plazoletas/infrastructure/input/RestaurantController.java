@@ -1,12 +1,15 @@
 package com.pragma.plazoletas.infrastructure.input;
 
+import com.pragma.plazoletas.application.dto.request.EmployeeRequestDto;
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
+import com.pragma.plazoletas.application.dto.response.RestaurantResponseDto;
+import com.pragma.plazoletas.application.handler.IEmployeeHandler;
 import com.pragma.plazoletas.application.handler.IRestaurantHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,18 +18,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/restaurant")
+@RequiredArgsConstructor
 public class RestaurantController {
     private final IRestaurantHandler restaurantHandler;
-
-    public RestaurantController(IRestaurantHandler restaurantHandler) {
-        this.restaurantHandler = restaurantHandler;
-    }
+    private final IEmployeeHandler employeeHandler;
 
     @Operation(summary = "Agregar restaurante, validando rol propietario")
     @ApiResponses(value = {
@@ -46,10 +48,15 @@ public class RestaurantController {
             @ApiResponse(responseCode = "204", description = "Lista vacia", content = @Content)
     })
     @GetMapping("/restaurantList/{page}/{size}")
-    public ResponseEntity<List<RestauranListResponseDto>> restaurantList(@PathVariable int page,
-                                                                         @PathVariable int size) {
+    public ResponseEntity<List<RestaurantResponseDto>> restaurantList(@PathVariable int page,
+                                                                      @PathVariable int size) {
         return new ResponseEntity<>(restaurantHandler.restauranListResponseDtos(size, page), HttpStatus.OK);
     }
 
-
+    @GetMapping("/employee/{user}/{restaurant}")
+    public ResponseEntity<Void>saveEmployee(@RequestHeader("Authorization") String token,
+                                            @PathVariable Long user, @PathVariable Long restaurant){
+        employeeHandler.saveEmployeeHandler(new EmployeeRequestDto(restaurant,user),token);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

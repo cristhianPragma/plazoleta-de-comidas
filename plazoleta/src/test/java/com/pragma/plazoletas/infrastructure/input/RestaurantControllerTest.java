@@ -1,8 +1,10 @@
 package com.pragma.plazoletas.infrastructure.input;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pragma.plazoletas.application.dto.request.EmployeeRequestDto;
 import com.pragma.plazoletas.application.dto.request.RestaurantRequestDto;
-import com.pragma.plazoletas.application.dto.response.RestauranListResponseDto;
+import com.pragma.plazoletas.application.dto.response.RestaurantResponseDto;
+import com.pragma.plazoletas.application.handler.IEmployeeHandler;
 import com.pragma.plazoletas.application.handler.IRestaurantHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,8 @@ class RestaurantControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private IRestaurantHandler restaurantHandler;
+    @MockBean
+    private IEmployeeHandler employeeHandler;
     private final String token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJQcm9waW";
 
     @BeforeEach
@@ -85,10 +89,11 @@ class RestaurantControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "ana", password = "Ana1234*", authorities = "Cliente")
     void ListRestaurantControllerSuccessTest() throws Exception {
         int pageSize =2,pageNumber=0;
-        List<RestauranListResponseDto>responseListDto =
-                List.of(new RestauranListResponseDto(), new RestauranListResponseDto());
+        List<RestaurantResponseDto>responseListDto =
+                List.of(new RestaurantResponseDto(), new RestaurantResponseDto());
 
         when(restaurantHandler.restauranListResponseDtos(pageSize,pageNumber))
               .thenReturn(responseListDto);
@@ -101,5 +106,36 @@ class RestaurantControllerTest {
         response.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(responseListDto.size())));
+    }
+    @Test
+    @WithMockUser(username = "ana", password = "Ana1234*", authorities = "Propietario")
+    void saveEmployeeSuccessTest() throws Exception {
+        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto(1L,1L);
+        doNothing().when(employeeHandler)
+                .saveEmployeeHandler(employeeRequestDto,token);
+
+        ResultActions response = mockMvc
+                .perform(get("/restaurant/employee/1/1")
+                        .header("Authorization", "Bearer " + token.substring(7)));
+
+        response.andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    @WithMockUser(username = "ana", password = "Ana1234*", authorities = "Cliente")
+    void saveEmployeeExceptionTest() throws Exception {
+        EmployeeRequestDto employeeRequestDto = new EmployeeRequestDto(1L,1L);
+        doNothing().when(employeeHandler)
+                .saveEmployeeHandler(employeeRequestDto,token);
+
+        ResultActions response = mockMvc
+                .perform(post("/restaurant/employee")
+                        .header("Authorization", "Bearer " + token.substring(7))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(employeeRequestDto)));
+
+        response.andDo(print())
+                .andExpect(status().isForbidden());
     }
 }
